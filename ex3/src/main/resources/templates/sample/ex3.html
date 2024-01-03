@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 th:text="${result}"></h1>
+    <h1 th:text="${dto}"></h1>
+
+    <th:block>
+        div 와 같이 영역 구성 태그
+    </th:block>
+
+    <script th:inline="javascript">
+        var msg = [[${result}]];
+        var dto = [[${dto}]];
+    </script>
+</body>
+</html>
