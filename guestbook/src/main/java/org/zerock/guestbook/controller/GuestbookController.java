@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/guestbook")
 @Log4j2
 public class GuestbookController {
-    @GetMapping("/")
+    @GetMapping({"/","/list"})
     public String index() {
-        return "redirect:/guestbook/list";
+        return "/guestbook/list";
     }
 }
