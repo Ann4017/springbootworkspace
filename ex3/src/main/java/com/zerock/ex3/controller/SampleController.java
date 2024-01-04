@@ -24,9 +24,9 @@ public class SampleController {
     }
 
     @GetMapping({"/ex2", "/exLink"})
-    public void exModel(Model model){
-        List<SampleDTO> list = IntStream.rangeClosed(1,20).asLongStream()
-                .mapToObj(i->{
+    public void exModel(Model model) {
+        List<SampleDTO> list = IntStream.rangeClosed(1, 20).asLongStream()
+                .mapToObj(i -> {
                     SampleDTO dto = SampleDTO.builder()
                             .sno(i)
                             .first("First.." + i)
@@ -36,7 +36,7 @@ public class SampleController {
                     return dto;
                 }).collect(Collectors.toList());
 
-        model.addAttribute("list",list);
+        model.addAttribute("list", list);
     }
 
     @GetMapping("/exInline")
@@ -57,6 +57,11 @@ public class SampleController {
     @GetMapping("/ex3")
     public void dex3() {
         log.info("ex3....");
+    }
+
+    @GetMapping({"/exLayout1", "/exLayout2", "/exTemplate", "/exSidebar"})
+    public void exLayout1() {
+        log.info("exLayout....");
     }
 
 }
