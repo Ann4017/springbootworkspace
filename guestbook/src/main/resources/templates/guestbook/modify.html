@@ -6,6 +6,8 @@
 
         <form th:action="@{/guestbook/modify}" th:method="post">
             <input type="hidden" name="page" th:value="${requestDTO.page}">
+            <input type="hidden" name="type" th:value="${requestDTO.type}">
+            <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
 
             <div class="form-group">
                 <label>Gno</label>
@@ -64,8 +66,14 @@
 
             $(".listBtn").click(function(){
                 var pageInfo = $("input[name='page']");
+                var typeInfo = $("input[name='type']");
+                var keywordInfo = $("input[name='keyword']");
+
                 actionForm.empty();
+
                 actionForm.append(pageInfo);
+                actionForm.append(typeInfo);
+                actionForm.append(keywordInfo);
 
                 actionForm
                     .attr("action", "/guestbook/list")
