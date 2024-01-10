@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{/layout/basic :: setContent(~{this :: content} )}">
+    <th:block th:fragment="content">
+        <h1 class="mt-4"></h1>
+        <!--bno, title, content, name, regDate, modDate-->
+        <div class="form-group">
+            <label>#</label>
+            <input class="form-control" type="text" readonly th:value="${dto.bno}">
+        </div>
+
+        <div class="form-group">
+            <label>Title</label>
+            <input class="form-control" type="text" readonly th:value="${dto.title}">
+        </div>
+
+        <div class="form-group">
+            <label>Content</label>
+            <textarea class="form-control" rows="5" readonly th:text="${dto.content}"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Writer</label>
+            <input class="form-control" type="text" readonly th:value="${dto.writerName}">
+        </div>
+
+        <div class="form-group">
+            <label>RegDate</label>
+            <input class="form-control" type="text" readonly th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}">
+        </div>
+
+        <div class="form-group">
+            <label>ModDate</label>
+            <input class="form-control" type="text" readonly th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}">
+        </div>
+
+        <button type="button" class="btn btn-outline-success"><a>Update</a></button>
+        <button type="button" class="btn btn-outline-danger"><a>Delete</a></button>
+        <button type="button" class="btn btn-outline-primary"><a>List</a></button>
+
+    </th:block>
+</th:block>

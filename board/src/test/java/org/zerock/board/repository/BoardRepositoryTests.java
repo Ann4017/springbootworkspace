@@ -3,6 +3,10 @@ package org.zerock.board.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.zerock.board.entity.Board;
 import org.zerock.board.entity.Member;
 import org.zerock.board.entity.Reply;
@@ -62,11 +66,34 @@ public class BoardRepositoryTests {
 //        Board board = (Board) arr[0];
 //        Reply reply = (Reply) arr[1];
 //
-//        System.out.println(board);
-//        System.out.println(reply);
+//        System.out.println(board); // Board Entity 정보
+//        System.out.println(reply); // Reply Entity 정보
 
         for (Object[] arr : result) {
             System.out.println(Arrays.toString(arr));
         }
+    }
+
+    // 게시글 목록 보기
+    @Test
+    public void testWithReplyCount() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+        Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
+
+        result.get().forEach(row -> {
+            System.out.println(Arrays.toString((Object[]) row));
+        });
+    }
+
+    // 게시글 상세 보기
+    @Test
+    public void testRead() {
+        Object result = boardRepository.getBoardByBno(100L);
+        Object[] arr = (Object[]) result;
+
+        System.out.println(arr[0]);
+        System.out.println(arr[1]);
+        System.out.println(arr[2]);
     }
 }
