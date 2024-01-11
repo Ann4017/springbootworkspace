@@ -6,7 +6,9 @@
         <!--bno, title, content, name, regDate, modDate-->
         <div class="form-group">
             <label>#</label>
-            <input class="form-control" type="text" readonly th:value="${dto.bno}">
+            <label>
+                <input class="form-control" type="text" readonly th:value="${dto.bno}">
+            </label>
         </div>
 
         <div class="form-group">
@@ -34,9 +36,13 @@
             <input class="form-control" type="text" readonly th:value="${#temporals.format(dto.modDate, 'yyyy/MM/dd HH:mm:ss')}">
         </div>
 
-        <button type="button" class="btn btn-outline-success"><a>Update</a></button>
-        <button type="button" class="btn btn-outline-danger"><a>Delete</a></button>
-        <button type="button" class="btn btn-outline-primary"><a>List</a></button>
+        <button type="button" class="btn btn-outline-success">
+            <a th:href="@{/board/modify(bno=${dto.bno}, page=${requestDTO.page})}">Edit</a>
+        </button>
+
+        <button type="button" class="btn btn-outline-primary">
+            <a th:href="@{/board/list(page=${requestDTO.page})}">List</a>
+        </button>
 
     </th:block>
 </th:block>
