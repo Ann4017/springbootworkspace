@@ -13,45 +13,48 @@ import java.util.stream.IntStream;
 
 @SpringBootTest
 public class ReviewRepositoryTests {
-
     @Autowired
     private ReviewRepository reviewRepository;
 
     @Test
-    public void insertReviews() {
-        IntStream.rangeClosed(1, 200).forEach(i -> {
+    public void insertMoviewReviews(){
+
+        IntStream.rangeClosed(1,200).forEach(i->{
             Long mno = (long)(Math.random() * 100) + 1;
+
             Long mid = (long)(Math.random() * 100) + 1;
+
             Movie movie = Movie.builder().mno(mno).build();
+
             Member member = Member.builder().mid(mid).build();
 
-            Review review = Review.builder()
+            Review moiveReview = Review.builder()
                     .member(member)
                     .movie(movie)
                     .grade((int)(Math.random() * 5) + 1)
-                    .text("리뷰 내용 " + i)
+                    .text("이 영화에 대한 느낌..." + i)
                     .build();
 
-            reviewRepository.save(review);
+            reviewRepository.save(moiveReview);
         });
     }
 
-    @Test
     //@Transactional
-    public void testGetMovieReviews() {
+    @Test
+    public void testGetMovieReviews(){
 
         Movie movie = Movie.builder()
                 .mno(98L)
                 .build();
 
-        List<Review> result = reviewRepository.findByMovie(movie);
+        List<Review> result= reviewRepository.findByMovie(movie);
 
         result.forEach(movieReview -> {
             System.out.println(movieReview.getReviewnum());
             System.out.println(movieReview.getGrade());
             System.out.println(movieReview.getText());
             System.out.println(movieReview.getMember().getEmail());
-            System.out.println("---------------------------------");
+            System.out.println("----------------------------------");
         });
     }
 }

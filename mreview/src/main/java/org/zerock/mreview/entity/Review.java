@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString(exclude = {"movie", "member"})
+@ToString(exclude = {"movie","member"})
 public class Review extends BaseEntity{
 
     @Id

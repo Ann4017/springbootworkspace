@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @ToString
-@Table(name = "m_member")
+@Table(name="m_member")
 public class Member extends BaseEntity{
 
     @Id
@@ -18,7 +18,8 @@ public class Member extends BaseEntity{
 
     private String email;
 
-    private  String pw;
+    private String pw;
 
     private String nickname;
+
 }

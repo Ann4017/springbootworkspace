@@ -21,6 +21,6 @@ public class MovieImage {
 
     private String path;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY) //무조건 lazy로
     private Movie movie;
 }

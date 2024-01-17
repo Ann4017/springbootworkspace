@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<th:black th:fragment="setContent(content)">
+<th:block th:fragment="setContent(content)">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -27,18 +27,18 @@
         background-color: green;
         }
     </style>
-
     <div class="header">
         <h1>Header</h1>
     </div>
 
     <div class="content">
-        <th:block th:replace="${content}"></th:block>
+        <th:block th:replace = "${content}">
+        </th:block>
     </div>
 
     <div class="footer">
         <h1>Footer</h1>
     </div>
 </body>
-</th:black>
+</th:block>
 </html>

@@ -6,19 +6,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
 
+import java.awt.*;
+
 @Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @ToString
-public class Movie extends BaseEntity{
+public class Movie extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mno;
 
     private String title;
-
 
 }
