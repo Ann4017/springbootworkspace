@@ -16,25 +16,200 @@
 
         <div class="form-group">
             <label>Title</label>
-            <input class="form-control" type="text" readonly th:value="${dto.title}">
+            <label>
+                <input class="form-control" type="text" readonly th:value="${dto.title}">
+            </label>
         </div>
 
         <div class="form-group">
             <label>Avg Rating</label>
-            <input class="form-control" type="text" readonly th:value="${dto.avg}">
+            <label>
+                <input class="form-control" type="text" readonly th:value="${dto.avg}">
+            </label>
         </div>
 
-        <div class="form-group">
-            <label>Review Count</label>
-            <input class="form-control" type="text" readonly th:value="${dto.reviewCnt}">
+
+        <style>
+            .uploadResult {
+                width: 100%;
+                background-color: gray;
+                margin-top: 10px;
+            }
+
+            .uploadResult ul {
+                display: flex;
+                flex-flow: row;
+                justify-content: center;
+                align-items: center;
+                vertical-align: top;
+                overflow: auto;
+            }
+
+            .uploadResult ul li {
+                list-style: none;
+                padding: 10px;
+                margin-left: 2em;
+            }
+
+            .uploadResult ul li img {
+                width: 100px;
+            }
+        </style>
+
+        <div class="form-group uploadResult">
+            <ul>
+                <li th:each="movieImage : ${dto.imageDTOList}">
+                    <img th:if="dto.imageDTOList.path != null" th:src="|/display?fileName=${movieImage.getImageURL()}|">
+                </li>
+            </ul>
         </div>
 
-        <div class="form-group" th:each="img: ${dto.imageDTOList}">
-            <label>Image</label>
-            <img th:if="${dto.imageDTOList.size() > 0 && dto.imageDTOList[0].path != null}"
-                 th:src="|/display?fileName=${img.getImageURL()}|">
+        <button type="button" class="btn btn-primary reviewListBtn">
+            Review Count <span class="badge badge-light">[[${dto.reviewCnt}]]</span>
+        </button>
+
+        <button type="button" class="btn btn-info addReviewBtn">
+            Review Register
+        </button>
+
+        <!-- The Modal -->
+        <div class="reviewModal modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Movie Review</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Reviewer ID</label>
+                            <input type="text" class="form-control" name="mid">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Grade<span class="grade"></span></label>
+                            <div class="starrr"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Reviewer Text</label>
+                            <input type="text" class="form-control" name="text" placeholder="GOod Movie!">
+                        </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary reviewSaveBtn">Save</button>
+                        <button type="button" class="btn btn-warning modifyBtn">Modify</button>
+                        <button type="button" class="btn btn-danger removeBtn">Remove</button>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
+        <div class="reviewList"></div>
+
+        <script th:src="@{/starrr.js}"></script>
+        <link th:href="@{/css/starrr.css}" rel="stylesheet">
+        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+
+        <script>
+            $(document).ready(function(e) {
+
+                let grade = 0;
+
+                $(".starrr").starrr({
+                    rating: grade,
+                    change: function(e, value){
+                        if (value) {
+                            console.log(value);
+                            grade = value;
+                        }
+                    }
+                });
+
+                var reviewModal = $(".reviewModal");
+                var inputMid = $("input[name='mid']");
+                var inputText = $("input[name='text']");
+
+                $(".addReviewBtn").click(function(){
+                    grade = 0;
+                    console.log(grade);
+                    inputMid.val("");
+                    inputText.val("");
+
+                    $(".fa-star").attr("class", "fa-star-o fa");
+
+                    $(".removeBtn, .modifyBtn").hide();
+                    $(".reviewSaveBtn").show()
+
+                    reviewModal.modal('show');
+                });
+
+                var mno = [[${dto.mno}]];
+
+                function getMovieReviews() {
+                    function formatTime(str){
+
+                        var date = new Date(str);
+
+                        return date.getFullYear() + '/' +
+                            (date.getMonth() + 1) + '/' +
+                            date.getDate() + ' ' +
+                            date.getHours() + ':' +
+                            date.getMinutes();
+                    }
+
+                    $.getJSON("/reviews/" + mno + "/all", function(arr){
+                         var str = "";
+
+                         $.each(arr, function(idx, review){
+                             str += ' <div class="card-body" date-reviewnum=' + review.reviewnum + ' + data-mid=' + review.mid + '>';
+                             str += ' <h5 class="card-title">' + review.text + ' <span>' + review.grade + '</span></h5>';
+                             str += ' <h6 class="card-subtitle mb-2 text-muted">' + review.nickname + '</h6>';
+                             str += ' <p class="card-text">' + formatTime(review.regDate) + '</p>';
+                             str += ' </div>';
+                         });
+
+                         $(".reviewList").html(str)
+
+                    });
+                }
+                getMovieReviews();
+
+
+                $(".reviewSaveBtn").click(function(e){
+                    var insertReview = {
+                        mno: mno,
+                        mid: $("input[name='mid']").val(),
+                        text: $("input[name='text']").val(),
+                        grade: grade
+                    };
+
+                    $.ajax({
+                        url: "/reviews/" + mno,
+                        method: "POST",
+                        data: JSON.stringify(insertReview),
+                        contentType: "application/json",
+                        success: function(data) {
+                            alert("댓글 등록 완료");
+                            reviewModal.modal('hide');
+                            getMovieReviews();
+                            grade = 0;
+                        }
+                    });
+                });
+            });
+
+
+
+        </script>
 
     </th:block>
 
