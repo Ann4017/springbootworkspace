@@ -20,6 +20,8 @@ public interface MovieService {
 
     MovieDTO getMovie(Long mno);
 
+    PageResultDTO<MovieDTO, Object[]> getSearch(PageRequestDTO pageRequestDTO, String title);
+
     // DTO -> Entity
     default Map<String,Object> dtoToEntity(MovieDTO movieDTO){
 

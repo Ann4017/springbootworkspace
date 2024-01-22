@@ -13,6 +13,10 @@ public interface ReviewService {
 
      Long register(ReviewDTO reviewDTO);
 
+     Long modify(ReviewDTO reviewDTO);
+
+     void delete(Long reviewnum);
+
     default ReviewDTO entityToDto(Review review) {
 
         ReviewDTO reviewDTO = ReviewDTO.builder()

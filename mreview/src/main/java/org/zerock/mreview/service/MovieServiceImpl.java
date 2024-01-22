@@ -96,4 +96,29 @@ public class MovieServiceImpl implements MovieService {
 
         return entitiesToDTO(movie, movieImageList, avg, reviewCnt);
     }
+
+    @Override
+    public PageResultDTO<MovieDTO, Object[]> getSearch(PageRequestDTO pageRequestDTO, String title) {
+
+        Pageable pageable = pageRequestDTO.getPageable(Sort.by("mno").descending());
+
+        Page<Object[]> result = movieRepository.getSearchPage(pageable, title);
+
+        log.info("==============================================");
+
+        result.getContent().forEach(arr -> {
+            log.info(Arrays.toString(arr));
+        });
+
+        log.info("==============================================");
+
+        Function<Object[], MovieDTO> fn = (arr -> entitiesToDTO(
+                (Movie)arr[0] ,
+                (List<MovieImage>)(Arrays.asList((MovieImage)arr[1])),
+                (Double) arr[2],
+                (Long)arr[3])
+        );
+
+        return new PageResultDTO<>(result,fn);
+    }
 }

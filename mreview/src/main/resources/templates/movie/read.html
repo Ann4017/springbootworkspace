@@ -59,7 +59,8 @@
         <div class="form-group uploadResult">
             <ul>
                 <li th:each="movieImage : ${dto.imageDTOList}">
-                    <img th:if="dto.imageDTOList.path != null" th:src="|/display?fileName=${movieImage.getImageURL()}|">
+                    <img th:if="dto.imageDTOList.path != null"
+                         th:src="|/display?fileName=${movieImage.getImageURL()}|">
                 </li>
             </ul>
         </div>
@@ -111,6 +112,24 @@
 
                 </div>
             </div>
+        </div> <!--modal end-->
+
+        <!-- The Modal -->
+        <div class="imgModal modal" tabindex="-2" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <img src="" class="img" style="width:100%">
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="reviewList"></div>
@@ -121,6 +140,15 @@
 
         <script>
             $(document).ready(function(e) {
+
+            $(".uploadResult ul li img").on("click", function(){
+                var target = $(this);
+                var src = target.attr("src");
+                $(".img").attr("src", src);
+
+                var imgModal = $(".imgModal");
+                imgModal.modal("show");
+            });
 
                 let grade = 0;
 
@@ -170,7 +198,7 @@
                          var str = "";
 
                          $.each(arr, function(idx, review){
-                             str += ' <div class="card-body" date-reviewnum=' + review.reviewnum + ' + data-mid=' + review.mid + '>';
+                             str += ' <div class="card-body" data-reviewnum=' + review.reviewnum + ' + data-mid=' + review.mid + '>';
                              str += ' <h5 class="card-title">' + review.text + ' <span>' + review.grade + '</span></h5>';
                              str += ' <h6 class="card-subtitle mb-2 text-muted">' + review.nickname + '</h6>';
                              str += ' <p class="card-text">' + formatTime(review.regDate) + '</p>';
@@ -205,6 +233,64 @@
                         }
                     });
                 });
+
+                var reviewnum;
+
+                $(".reviewList").on("click", ".card-body", function(){
+                    $(".reviewSaveBtn").hide();
+                    $(".removeBtn, .modifyBtn").show();
+
+                    var targetReview = $(this);
+                    reviewnum = targetReview.data("reviewnum");
+
+                    console.log(reviewnum);
+                    inputMid.val(targetReview.data("mid"));
+                    inputText.val(targetReview.find('.card-title').clone().children().remove().end().text());
+
+                    var grade = targetReview.find('.card-title span').html();
+                    $(".starrr a:nth-child(" + grade + ")").trigger('click');
+
+                    $(".reviewModal").modal("show");
+                });
+
+                $(".modifyBtn").on("click", function(){
+
+                    var updateReview = {
+                        reviewnum: reviewnum,
+                        mno: mno,
+                        mid: $("input[name='mid']").val(),
+                        text: $("input[name='text']").val(),
+                        grade: grade
+                    };
+
+                    $.ajax({
+                        url: "/reviews/" + mno + "/" + reviewnum,
+                        method: "put",
+                        data: JSON.stringify(updateReview),
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function(result){
+                            alert("댓글 수정 완료");
+                            reviewModal.modal('hide');
+                            getMovieReviews();
+                        }
+                    });
+                });
+
+                $(".removeBtn").on("click", function(){
+                    $.ajax({
+                        url: "/reviews/" + mno + "/" + reviewnum,
+                        method: "delete",
+                        data: ({reviewnum : reviewnum}),
+                        contentType: "application/json",
+                        success: function(){
+                            alert("댓글 삭제 완료");
+                            reviewModal.modal('hide');
+                            getMovieReviews();
+                        }
+                    });
+                });
+
             });
 
 

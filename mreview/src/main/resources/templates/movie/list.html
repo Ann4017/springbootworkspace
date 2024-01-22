@@ -12,6 +12,17 @@
                     <button type="button" class="btn btn-outline-primary">REGISTER</button>
                 </a>
             </span>
+
+            <form th:action="@{/movie/list}" method="get" id="searchForm">
+                <input type="hidden" name="page" value="1">
+                <div class="input-group mb-2">
+                    <input class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                    <div>
+                        <button class="btn btn-outline-secondary btn-search" type="button">Search</button>
+                        <button class="btn btn-outline-secondary btn-clear" type="button">Clear</button>
+                    </div>
+                </div>
+            </form>
         </h1>
 
         <table class="table table-striped">
@@ -49,6 +60,20 @@
                 <a class="page-link" th:href="@{/movie/list(page=${result.end + 1})}">Next</a>
             </li>
         </ul>
+
+        <script th:inline="javascript">
+
+
+          var searchForm = $("#searchForm");
+
+          $(".btn-search").click(function(){
+              searchForm.submit();
+          });
+
+          $(".btn-clear").click(function(){
+              searchForm.empty().submit();
+          });
+        </script>
 
 
     </th:block>

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.zerock.mreview.dto.ReviewDTO;
+import org.zerock.mreview.entity.Review;
 import org.zerock.mreview.service.ReviewServiceImpl;
 
 import java.util.List;
@@ -38,6 +39,23 @@ public class ReviewController {
 
         return new ResponseEntity<>(rno, HttpStatus.OK);
     }
+
+    @PutMapping("/{mno}/{reviewnum}")
+    public ResponseEntity<Long> modify(@RequestBody ReviewDTO reviewDTO, @PathVariable Long reviewnum) {
+        log.info(reviewDTO);
+        log.info(reviewnum);
+
+        Long rno = reviewService.modify(reviewDTO);
+
+        return new ResponseEntity<Long>(rno, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{mno}/{reviewnum}")
+    public void delete(@PathVariable Long reviewnum) {
+
+        reviewService.delete(reviewnum);
+    }
+
 
 
 }

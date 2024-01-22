@@ -4,9 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.mreview.dto.MovieDTO;
 import org.zerock.mreview.dto.PageRequestDTO;
@@ -53,5 +51,14 @@ public class MovieController {
         log.info("page................: " + requestDTO.getPage());
 
         model.addAttribute("dto", movieService.getMovie(movieDTO.getMno()));
+    }
+
+    @GetMapping("/list/{keyword}")
+    public void search(PageRequestDTO pageRequestDTO, Model model, @PathVariable String keyword) {
+
+        log.info("--------------------------" + keyword);
+
+        model.addAttribute("result", movieService.getSearch(pageRequestDTO, keyword));
+
     }
 }
