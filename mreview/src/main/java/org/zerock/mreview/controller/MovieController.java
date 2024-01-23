@@ -53,12 +53,4 @@ public class MovieController {
         model.addAttribute("dto", movieService.getMovie(movieDTO.getMno()));
     }
 
-    @GetMapping("/list/{keyword}")
-    public void search(PageRequestDTO pageRequestDTO, Model model, @PathVariable String keyword) {
-
-        log.info("--------------------------" + keyword);
-
-        model.addAttribute("result", movieService.getSearch(pageRequestDTO, keyword));
-
-    }
 }
